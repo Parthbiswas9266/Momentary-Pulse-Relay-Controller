@@ -1,4 +1,4 @@
-# ESP32 Smart Pump Controller
+# Momentary Pulse Relay Controller
 
 An open-source smart pump controller built with **ESP32, ESPHome, and Home Assistant**.
 
