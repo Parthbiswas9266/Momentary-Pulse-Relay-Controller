@@ -1,0 +1,302 @@
+
+esphome:
+  name: borewell-controller
+  friendly_name: Borewell Controller
+
+esp32:
+  variant: esp32
+  framework:
+    type: esp-idf
+
+logger:
+
+api:
+  encryption:
+    key: "masked for saftey"
+
+ota:
+  - platform: esphome
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  ap:
+    ssid: "Borewell Contro Fallback Hotspot"
+    password: "00000000"
+
+captive_portal:
+
+globals:
+  - id: borewell_commanded_on
+    type: bool
+    restore_value: no
+    initial_value: "false"
+
+  - id: timer_lockout
+    type: bool
+    restore_value: no
+    initial_value: "false"
+
+time:
+  - platform: homeassistant
+    id: ha_time
+
+switch:
+  - platform: gpio
+    pin:
+      number: GPIO25
+      inverted: true
+    id: relay_start
+    internal: true
+    restore_mode: ALWAYS_OFF
+
+  - platform: gpio
+    pin:
+      number: GPIO26
+      inverted: true
+    id: relay_stop
+    internal: true
+    restore_mode: ALWAYS_OFF
+
+  - platform: template
+    name: "Borewell Bypass Mode"
+    id: bypass_mode
+    optimistic: true
+    restore_mode: ALWAYS_OFF
+    icon: "mdi:shield-off"
+
+  - platform: template
+    name: "Borewell Auto-Off Timer"
+    id: timer_enabled
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+    icon: "mdi:timer"
+
+  - platform: template
+    name: "Borewell Schedule"
+    id: schedule_enabled
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+    icon: "mdi:calendar-clock"
+
+number:
+  - platform: template
+    name: "Borewell Timer Duration"
+    id: timer_minutes
+    min_value: 1
+    max_value: 600
+    step: 1
+    initial_value: 15
+    optimistic: true
+    restore_value: true
+    unit_of_measurement: min
+
+  - platform: template
+    name: "Borewell Schedule ON Hour"
+    id: schedule_on_hour
+    min_value: 0
+    max_value: 23
+    step: 1
+    initial_value: 6
+    optimistic: true
+    restore_value: true
+
+  - platform: template
+    name: "Borewell Schedule ON Minute"
+    id: schedule_on_minute
+    min_value: 0
+    max_value: 59
+    step: 1
+    initial_value: 0
+    optimistic: true
+    restore_value: true
+
+  - platform: template
+    name: "Borewell Schedule OFF Hour"
+    id: schedule_off_hour
+    min_value: 0
+    max_value: 23
+    step: 1
+    initial_value: 6
+    optimistic: true
+    restore_value: true
+
+  - platform: template
+    name: "Borewell Schedule OFF Minute"
+    id: schedule_off_minute
+    min_value: 0
+    max_value: 59
+    step: 1
+    initial_value: 30
+    optimistic: true
+    restore_value: true
+
+script:
+  - id: relay_pulse
+    mode: single
+    parameters:
+      start_command: bool
+    then:
+      - if:
+          condition:
+            lambda: 'return start_command;'
+          then:
+            - switch.turn_on: relay_start
+            - delay: 1s
+            - switch.turn_off: relay_start
+          else:
+            - switch.turn_on: relay_stop
+            - delay: 1s
+            - switch.turn_off: relay_stop
+
+  - id: borewell_auto_off
+    mode: restart
+    then:
+      - delay: !lambda |-
+          return (uint32_t) (id(timer_minutes).state * 60000.0f);
+      - if:
+          condition:
+            lambda: 'return id(timer_enabled).state;'
+          then:
+            - lambda: |-
+                id(timer_lockout) = true;
+                id(borewell_commanded_on) = false;
+            - script.execute:
+                id: relay_pulse
+                start_command: false
+
+  - id: borewell_start
+    mode: single
+    then:
+      - lambda: |-
+          id(timer_lockout) = false;
+          id(borewell_commanded_on) = true;
+      - script.execute:
+          id: relay_pulse
+          start_command: true
+      - if:
+          condition:
+            switch.is_on: timer_enabled
+          then:
+            - script.execute: borewell_auto_off
+
+  - id: borewell_stop
+    mode: single
+    then:
+      - script.stop: borewell_auto_off
+      - lambda: |-
+          id(borewell_commanded_on) = false;
+          id(timer_lockout) = false;
+      - script.execute:
+          id: relay_pulse
+          start_command: false
+
+button:
+  - platform: template
+    name: "Borewell Start"
+    icon: "mdi:play-circle"
+    on_press:
+      - script.execute: borewell_start
+
+  - platform: template
+    name: "Borewell Stop"
+    icon: "mdi:stop-circle"
+    on_press:
+      - script.execute: borewell_stop
+
+uart:
+  id: pzem_uart
+  tx_pin: GPIO17
+  rx_pin: GPIO16
+  baud_rate: 9600
+
+modbus:
+  id: pzem_modbus
+  uart_id: pzem_uart
+  send_wait_time: 200ms
+
+sensor:
+  - platform: pzemac
+    modbus_id: pzem_modbus
+    address: 1
+
+    voltage:
+      name: "Borewell Voltage"
+
+    current:
+      name: "Borewell Current"
+      id: borewell_current
+
+    power:
+      name: "Borewell Power"
+
+    energy:
+      name: "Borewell Energy"
+
+    frequency:
+      name: "Borewell Frequency"
+
+    power_factor:
+      name: "Borewell Power Factor"
+
+    update_interval: 10s
+
+binary_sensor:
+  - platform: analog_threshold
+    id: borewell_current_running
+    name: "Borewell Current Running"
+    internal: true
+    device_class: running
+    sensor_id: borewell_current
+    threshold:
+      upper: 6.0
+      lower: 1.0
+    on_press:
+      - if:
+          condition:
+            switch.is_on: timer_enabled
+          then:
+            - if:
+                condition:
+                  lambda: 'return !id(borewell_auto_off).is_running();'
+                then:
+                  - script.execute: borewell_auto_off
+
+  - platform: template
+    name: "Borewell Running"
+    device_class: running
+    lambda: |-
+      if (id(bypass_mode).state) {
+        return id(borewell_commanded_on);
+      }
+      return id(borewell_current_running).state;
+
+interval:
+  - interval: 1min
+    then:
+      - if:
+          condition:
+            lambda: |-
+              auto now = id(ha_time).now();
+              return now.is_valid() &&
+                now.second == 0 &&
+                id(schedule_enabled).state;
+          then:
+            - if:
+                condition:
+                  lambda: |-
+                    auto now = id(ha_time).now();
+                    return now.hour == (int) id(schedule_on_hour).state &&
+                      now.minute == (int) id(schedule_on_minute).state &&
+                      !id(timer_lockout);
+                then:
+                  - script.execute: borewell_start
+
+            - if:
+                condition:
+                  lambda: |-
+                    auto now = id(ha_time).now();
+                    return now.hour == (int) id(schedule_off_hour).state &&
+                      now.minute == (int) id(schedule_off_minute).state;
+                then:
+                  - script.execute: borewell_stop
