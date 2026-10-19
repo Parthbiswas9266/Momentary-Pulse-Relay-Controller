@@ -70,6 +70,23 @@ The controller has been installed alongside the existing borewell control panel.
 
 The current version uses separate off-the-shelf modules mounted inside an enclosure. The installation is undergoing an extended field-testing period before the planned custom PCB redesign for V2.
 
+## Home Assistant Dashboard
+
+The controller is integrated with Home Assistant, providing a centralized interface for pump control, scheduling, electrical monitoring, and automation.
+
+The dashboard below shows the current Home Assistant interface, including the Borewell Start and Stop controls, running status, configurable timer and schedule, bypass mode, and live electrical measurements.
+
+ <img src="Images/Home Assistant Dashboard.png" alt="Momentary Pulse Relay Controller Home Assistant dashboard">
+
+The dashboard displays:
+
+- **Pump control:** Start, Stop, and running status.
+- **Automation:** Auto-off timer, scheduled start and stop times, and bypass mode.
+- **Electrical monitoring:** Voltage, current, power, frequency, and power factor.
+- **Energy tracking:** Lifetime energy consumption and today's consumption.
+
+The displayed readings reflect the state of the system at the time the screenshot was captured.
+
 
 ## Hardware
 
