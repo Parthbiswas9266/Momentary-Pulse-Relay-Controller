@@ -51,13 +51,25 @@ The V2 design may incorporate lessons learned during field testing, including wi
 
 ## Connection Diagram
 
-The following diagram illustrates the current hardware architecture and connections between the ESP32, PZEM-004T energy meter, power supply, relay module, and existing pump control panel.
+The following diagram shows the wiring architecture of the Momentary Pulse Relay Controller, including the ESP32, PZEM-004T energy meter, power supply, relay module, and existing pump control panel.
 
-
+![Momentary Pulse Relay Controller connection diagram](Images/MPRC%20Architecture_Connection%20Diagram.png)
 
 The relay contacts are intended to operate in parallel with the corresponding physical Start and Stop push buttons, subject to compatibility with the existing control circuit.
 
-Refer to the diagram and verify the actual terminal markings on each component before wiring. Wire colors in the diagram are illustrative and should not be treated as a substitute for terminal identification or electrical testing.
+Verify the actual terminal markings on each component before wiring. Wire colors in the diagram are illustrative and should not replace proper terminal identification or electrical testing.
+
+## Field Installation
+
+The controller has been installed alongside the existing borewell control panel. The photographs below show the deployed hardware assembly.
+
+<p align="center">
+  <img src="Images/IMG_8130.jpg" alt="Momentary Pulse Relay Controller installed beside the borewell control panel" width="48%">
+  <img src="Images/IMG_8131.jpg" alt="Close-up of the deployed controller enclosure and modules" width="48%">
+</p>
+
+The current version uses separate off-the-shelf modules mounted inside an enclosure. The installation is undergoing an extended field-testing period before the planned custom PCB redesign for V2.
+
 
 ## Hardware
 
