@@ -53,7 +53,7 @@ The V2 design may incorporate lessons learned during field testing, including wi
 
 The following diagram shows the wiring architecture of the Momentary Pulse Relay Controller, including the ESP32, PZEM-004T energy meter, power supply, relay module, and existing pump control panel.
 
-![Momentary Pulse Relay Controller connection diagram](Images/MPRC Architecture_Connection Diagram.png)
+ <img src="Images/MPRC Architecture_Connection Diagram.png" alt="Momentary Pulse Relay Controller connection diagram">
 
 The relay contacts are intended to operate in parallel with the corresponding physical Start and Stop push buttons, subject to compatibility with the existing control circuit.
 
