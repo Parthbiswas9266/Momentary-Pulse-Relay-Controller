@@ -96,7 +96,7 @@ The current implementation uses off-the-shelf modules assembled inside an enclos
 | --------------------------- | -------------------------------------------------------------------------------- | ---------------------------------------- | --------------------------------------- |
 | ESP32 development board     | ESP32 DevKit-style board with ESP-WROOM-32 module                                | Main controller and Wi-Fi communication  | [Product link](https://xxxxxxxx.com)    |
 | Two-channel relay module    | 5 V relay module with two independent relay channels                             | Emulates the Start and Stop push buttons | [Product link](https://xxxxxxxx.com)    |
-| PZEM-004T energy meter      | PZEM-004T, 100 A current-transformer variant                                     | AC electrical measurements               | [Product link](https://xxxxxxxx.com)    |
+| PZEM-004T (V-1.0) energy meter      | PZEM-004T, 100 A current-transformer variant                                     | AC electrical measurements               | [Product link](https://xxxxxxxx.com)    |
 | Current transformer (CT)    | Compatible 100 A CT for the selected PZEM meter                                  | Measures pump current                    | [Product link](https://xxxxxxxx.com)    |
 | AC-DC power supply          | Hi-Link HLK-5M05, 5 V / 5 W                                                      | Supplies low-voltage DC power            | [Product link](https://xxxxxxxx.com)    |
 | Existing pump control panel | Single-phase submersible pump controller with contactor and protection circuitry | Primary motor switching and protection   | Existing installation                   |
