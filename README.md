@@ -127,7 +127,7 @@ The PZEM UART wiring must follow the ESPHome configuration and the pin labels of
 
 Home Assistant sends a Start or Stop command to the ESP32. The controller energizes the corresponding relay for approximately one second and then releases it.
 
-The relay's normally open dry contacts are intended to be connected in parallel with the corresponding physical push button, provided the existing panel's control circuit is compatible.
+The relay's normally closed dry contacts are intended to be connected in series with the corresponding physical push button, provided the existing panel's control circuit is compatible.
 
 This arrangement allows the original physical controls to remain available while adding remote operation.
 
