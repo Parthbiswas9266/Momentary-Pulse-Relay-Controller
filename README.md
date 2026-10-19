@@ -100,7 +100,7 @@ The current implementation uses off-the-shelf modules assembled inside an enclos
 | Current transformer (CT)    | Compatible 100 A CT for the selected PZEM meter                                  | Measures pump current                    | [Product link](https://robu.in/product/peacefair-pzem-004t-d-p-with-coil-cthot-ac-meter/)    |
 | AC-DC power supply          | Hi-Link HLK-10M05, 5V/10W                                                    | Supplies low-voltage DC power            | [Product link](https://robu.in/product/hlk-10m05-5v-10w-switch-power-supply-module/)    |
 | Existing pump control panel | Single-phase submersible pump controller with contactor and protection circuitry | Primary motor switching and protection   | Existing installation                   |
-| Home Assistant server       | Home Assistant with ESPHome integration                                          | Dashboard, configuration, and automation | [Project website](https://xxxxxxxx.com) |
+| Home Assistant server       | Home Assistant with ESPHome integration                                          | Dashboard, configuration, and automation | [Project website](https://github.com/Parthbiswas9266/Momentary-Pulse-Relay-Controller/blob/main/README.md) |
 
 ### ESP32 board identification
 
