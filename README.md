@@ -55,7 +55,7 @@ The following diagram shows the wiring architecture of the Momentary Pulse Relay
 
  <img src="Images/MPRC Architecture_Connection Diagram.png" alt="Momentary Pulse Relay Controller connection diagram">
 
-The relay contacts are intended to operate in parallel with the corresponding physical Start and Stop push buttons, subject to compatibility with the existing control circuit.
+The relay contacts are intended to operate in series with the corresponding physical Start and Stop push buttons, subject to compatibility with the existing control circuit.
 
 Verify the actual terminal markings on each component before wiring. Wire colors in the diagram are illustrative and should not replace proper terminal identification or electrical testing.
 
